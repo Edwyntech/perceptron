@@ -1,6 +1,7 @@
 spring:
   application:
     name: perceptron
-logger:
+logging:
   level:
     root: INFO
+    web: DEBUG

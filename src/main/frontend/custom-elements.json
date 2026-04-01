@@ -4,27 +4,473 @@
   "modules": [
     {
       "kind": "javascript-module",
-      "path": "src/main/frontend/chart-options.ts",
+      "path": "src/main/frontend/api-client.ts",
       "declarations": [
         {
-          "kind": "variable",
-          "name": "options",
-          "type": {
-            "text": "ComboChartOptions"
-          },
-          "default": "{ title: \"Classification\", axes: { left: { title: \"Y\", mapsTo: \"y\", scaleType: ScaleTypes.LINEAR, }, bottom: { title: \"X\", mapsTo: \"x\", scaleType: ScaleTypes.LINEAR, }, }, comboChartTypes: [ { type: \"scatter\", options: {}, correspondingDatasets: [\"Au-dessus\", \"En-dessous\"] }, { type: \"line\", options: {}, correspondingDatasets: [\"Classification\"] } ], legend: { alignment: \"center\", position: \"top\", }, height: \"100%\", }"
+          "kind": "class",
+          "description": "",
+          "name": "ApiClient",
+          "members": [
+            {
+              "kind": "method",
+              "name": "getClassification",
+              "return": {
+                "type": {
+                  "text": "Promise<Classification>"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "reset",
+              "return": {
+                "type": {
+                  "text": "Promise<Classification>"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "setClassifier",
+              "return": {
+                "type": {
+                  "text": "Promise<Classification>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "line",
+                  "type": {
+                    "text": "Line"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "addPoint",
+              "return": {
+                "type": {
+                  "text": "Promise<Classification>"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "train",
+              "return": {
+                "type": {
+                  "text": "Promise<Classification>"
+                }
+              }
+            }
+          ]
         }
       ],
       "exports": [
         {
           "kind": "js",
-          "name": "options",
+          "name": "ApiClient",
           "declaration": {
-            "name": "options",
-            "module": "src/main/frontend/chart-options.ts"
+            "name": "ApiClient",
+            "module": "src/main/frontend/api-client.ts"
           }
         }
       ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/main/frontend/classification-chart.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ClassificationChart",
+          "members": [
+            {
+              "kind": "field",
+              "name": "classification",
+              "type": {
+                "text": "Classification | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "comboChart",
+              "type": {
+                "text": "ComboChart | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "chartContainer",
+              "type": {
+                "text": "HTMLDivElement"
+              },
+              "privacy": "private"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "classification-chart",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ClassificationChart",
+          "declaration": {
+            "name": "ClassificationChart",
+            "module": "src/main/frontend/classification-chart.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "classification-chart",
+          "declaration": {
+            "name": "ClassificationChart",
+            "module": "src/main/frontend/classification-chart.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/main/frontend/classification-header.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ClassificationHeader",
+          "members": [],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "classification-header",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ClassificationHeader",
+          "declaration": {
+            "name": "ClassificationHeader",
+            "module": "src/main/frontend/classification-header.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "classification-header",
+          "declaration": {
+            "name": "ClassificationHeader",
+            "module": "src/main/frontend/classification-header.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/main/frontend/classification-toolbar.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ClassificationToolbar",
+          "members": [
+            {
+              "kind": "field",
+              "name": "apiClient",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new ApiClient()"
+            },
+            {
+              "kind": "field",
+              "name": "chartHolder",
+              "type": {
+                "text": "ClassificationChart"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "notification",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lineItem",
+              "type": {
+                "text": "HTMLElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "resetButton",
+              "type": {
+                "text": "HTMLElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "addPointsButton",
+              "type": {
+                "text": "HTMLElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "trainButton",
+              "type": {
+                "text": "HTMLElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "addPointsCountInput",
+              "type": {
+                "text": "HTMLInputElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "epochCountInput",
+              "type": {
+                "text": "HTMLInputElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "slopeInput",
+              "type": {
+                "text": "HTMLInputElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "interceptInput",
+              "type": {
+                "text": "HTMLInputElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "expandAllIcon",
+              "type": {
+                "text": "HTMLElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "collapseAllIcon",
+              "type": {
+                "text": "HTMLElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "getClassification",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "updateClassification",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "classification",
+                  "type": {
+                    "text": "Classification"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "showError",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "message",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "allButtons",
+              "type": {
+                "text": "HTMLElement[]"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "disableButtons",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "enableButtons",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "withButtons",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "action",
+                  "type": {
+                    "text": "() => Promise<void>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "onBoundaryChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "onExpandAll",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "onCollapseAll",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "onReset",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "onAddPoints",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "onTrain",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "classification-toolbar",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ClassificationToolbar",
+          "declaration": {
+            "name": "ClassificationToolbar",
+            "module": "src/main/frontend/classification-toolbar.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "classification-toolbar",
+          "declaration": {
+            "name": "ClassificationToolbar",
+            "module": "src/main/frontend/classification-toolbar.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/main/frontend/domain.ts",
+      "declarations": [],
+      "exports": []
     },
     {
       "kind": "javascript-module",

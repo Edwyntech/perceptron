@@ -1,0 +1,51 @@
+{
+  "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
+  "name": "perceptron-ui",
+  "version": "undefined",
+  "description-markup": "markdown",
+  "contributions": {
+    "html": {
+      "elements": [
+        {
+          "name": "classification-chart",
+          "description": "\n---\n",
+          "doc-url": "",
+          "attributes": [],
+          "events": [],
+          "js": {
+            "properties": [
+              { "name": "classification", "type": "Classification | null" }
+            ],
+            "events": []
+          }
+        },
+        {
+          "name": "classification-header",
+          "description": "\n---\n",
+          "doc-url": "",
+          "attributes": [],
+          "events": [],
+          "js": { "properties": [], "events": [] }
+        },
+        {
+          "name": "classification-toolbar",
+          "description": "\n---\n",
+          "doc-url": "",
+          "attributes": [],
+          "events": [],
+          "js": {
+            "properties": [
+              { "name": "chartHolder", "type": "ClassificationChart" },
+              { "name": "notification", "type": "HTMLElement" }
+            ],
+            "events": []
+          }
+        }
+      ]
+    },
+    "css": {
+      "properties": [],
+      "pseudo-elements": []
+    }
+  }
+}

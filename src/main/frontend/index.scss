@@ -34,13 +34,13 @@ main {
   min-height: 0;
 }
 
-.toolbar {
+classification-toolbar {
   display: flex;
   flex-direction: column;
   gap: layout.$spacing-05;
 }
 
-#chart-container {
+classification-chart {
   min-height: 0;
 }
 

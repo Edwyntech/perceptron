@@ -1,6 +1,13 @@
 import '@carbon/web-components/es';
 
-import './accordion.ts';
-import {apiClient, updateClassification} from './classifier.ts';
+import './classification-header.ts';
+import './classification-chart.ts';
+import './classification-toolbar.ts';
+import {ClassificationChart} from './classification-chart.ts';
+import {ClassificationToolbar} from './classification-toolbar.ts';
 
-await apiClient.getClassification().then(updateClassification).catch(console.error);
+document.addEventListener('DOMContentLoaded', () => {
+  const toolbar = document.querySelector('classification-toolbar') as ClassificationToolbar;
+  toolbar.chartHolder = document.querySelector('classification-chart') as ClassificationChart;
+  toolbar.notification = document.getElementById('error-notification') as HTMLElement;
+});

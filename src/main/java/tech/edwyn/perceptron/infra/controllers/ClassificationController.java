@@ -31,9 +31,8 @@ public class ClassificationController {
 
   @PostMapping("/reset")
   public Classification reset() {
-    throw new UnsupportedOperationException();
-//    classification.reset();
-//    return classification;
+    classification.reset();
+    return classification;
   }
 
   @PostMapping("/points")

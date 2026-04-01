@@ -16,6 +16,7 @@
     "@carbon/styles": "latest",
     "@carbon/type": "latest",
     "@carbon/web-components": "latest",
+    "lit": "latest",
     "sass-embedded": "latest"
   },
   "devDependencies": {
