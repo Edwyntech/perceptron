@@ -97,13 +97,13 @@ export class ClassificationChart extends LitElement {
     }
   }
 
-  updated(changedProperties: Map<string, unknown>): void {
+  override updated(changedProperties: Map<string, unknown>): void {
     if (changedProperties.has('classification') && this.classification && this.comboChart) {
       this.comboChart.model.setData(chartDataFrom(this.classification));
     }
   }
 
-  render() {
+  override render() {
     return html`<div id="chart-container"></div>`;
   }
 }

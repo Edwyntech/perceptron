@@ -1,5 +1,5 @@
-import {LitElement, css, html} from 'lit';
-import {customElement, property, query, state} from 'lit/decorators.js';
+import {LitElement, html} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
 import ExpandAll from '@carbon/icons/es/expand-all/16';
 import CollapseAll from '@carbon/icons/es/collapse-all/16';
 import {ApiClient} from './api-client.ts';
@@ -21,52 +21,23 @@ export class ClassificationToolbar extends LitElement {
     return this;
   }
 
-  static styles = css`
-    classification-toolbar .boundary-inputs {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      gap: 10px;
-    }
-
-    classification-toolbar .boundary-inputs cds-number-input {
-      width: 150px;
-    }
-  `;
-
-  override connectedCallback(): void {
-    super.connectedCallback();
-    const styleId = 'classification-toolbar-styles';
-    if (!document.getElementById(styleId)) {
-      const style = document.createElement('style');
-      style.id = styleId;
-      style.textContent = (ClassificationToolbar.styles as any).cssText;
-      document.head.appendChild(style);
-    }
-  }
-
   private readonly apiClient = new ApiClient();
 
   @property({attribute: false})
   chartHolder!: ClassificationChart;
 
   @property({attribute: false})
-  set notification(el: HTMLElement) {
-    this._notification = el;
-    el.addEventListener('cds-notification-closed', () => {
-      el.style.display = 'none';
-    });
-  }
-  get notification(): HTMLElement {
-    return this._notification;
-  }
-  private _notification!: HTMLElement;
+  notification!: HTMLElement;
 
-  @query('#classification-line-item')
-  private lineItem!: HTMLElement;
+  private get lineItem(): HTMLElement {
+    return this.querySelector('#classification-line-item') as HTMLElement;
+  }
 
   @state()
   private _busy = false;
+
+  @state()
+  private _allExpanded = false;
 
   @state()
   private _addPointsCount = 100;
@@ -83,6 +54,20 @@ export class ClassificationToolbar extends LitElement {
   protected override async firstUpdated(): Promise<void> {
     await this.apiClient.getClassification().then(c => this.updateClassification(c)).catch(console.error);
   }
+
+  override updated(changedProperties: Map<string, unknown>): void {
+    if (changedProperties.has('notification') && this.notification) {
+      const prev = changedProperties.get('notification') as HTMLElement | undefined;
+      if (prev) {
+        prev.removeEventListener('cds-notification-closed', this.onNotificationClosed);
+      }
+      this.notification.addEventListener('cds-notification-closed', this.onNotificationClosed);
+    }
+  }
+
+  private readonly onNotificationClosed = (): void => {
+    this.notification.style.display = 'none';
+  };
 
   updateClassification(classification: Classification): void {
     this.chartHolder.classification = classification;
@@ -108,19 +93,11 @@ export class ClassificationToolbar extends LitElement {
     }
   }
 
-  private onBoundaryChange(e: Event): void {
-    const input = e.target as HTMLInputElement;
-    if (input.name === 'slope') this._slope = parseFloat(input.value);
-    else if (input.name === 'intercept') this._intercept = parseFloat(input.value);
+  private onBoundaryChange(e: CustomEvent<{value: string}>): void {
+    const input = e.target as HTMLElement;
+    if (input.getAttribute('name') === 'slope') this._slope = parseFloat(e.detail.value);
+    else if (input.getAttribute('name') === 'intercept') this._intercept = parseFloat(e.detail.value);
     this.withButtons(() => this.apiClient.setClassifier({slope: this._slope, intercept: this._intercept}).then(c => this.updateClassification(c)));
-  }
-
-  private onExpandAll(): void {
-    this.querySelectorAll<HTMLElement>('cds-accordion-item').forEach(item => item.setAttribute('open', ''));
-  }
-
-  private onCollapseAll(): void {
-    this.querySelectorAll<HTMLElement>('cds-accordion-item').forEach(item => item.removeAttribute('open'));
   }
 
   private onReset(): void {
@@ -149,39 +126,67 @@ export class ClassificationToolbar extends LitElement {
     });
   }
 
-  render() {
+  override render() {
     return html`
       <cds-button-set>
-        <cds-icon-button id="expand-all-btn" label="Tout déplier" size="sm" kind="ghost" @click=${this.onExpandAll}>
+        <cds-icon-button id="expand-all-btn" label="Tout déplier" size="sm" kind="ghost"
+                         @click=${() => this._allExpanded = true}>
           <cds-icon slot="icon" .icon=${ExpandAll}></cds-icon>
         </cds-icon-button>
-        <cds-icon-button id="collapse-all-btn" label="Tout replier" size="sm" kind="ghost" @click=${this.onCollapseAll}>
+        <cds-icon-button id="collapse-all-btn" label="Tout replier" size="sm" kind="ghost"
+                         @click=${() => this._allExpanded = false}>
           <cds-icon slot="icon" .icon=${CollapseAll}></cds-icon>
         </cds-icon-button>
       </cds-button-set>
 
+      <style>
+        classification-toolbar .boundary-inputs {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          gap: 10px;
+        }
+
+        classification-toolbar .boundary-inputs cds-number-input {
+          width: 150px;
+        }
+      </style>
+
       <cds-accordion>
-        <cds-accordion-item title="Equation de la droite: y = x" id="classification-line-item">
+        <cds-accordion-item title="Equation de la droite: y = x" id="classification-line-item"
+                            ?open=${this._allExpanded}>
           <div class="boundary-inputs">
             <p>y =</p>
-            <cds-number-input name="slope" label="pente" min="-100" max="100" .value=${String(this._slope)} step="1" @cds-number-input=${this.onBoundaryChange}></cds-number-input>
+            <cds-number-input name="slope" label="pente" min="-100" max="100" .value=${String(this._slope)} step="1"
+                              @cds-number-input=${this.onBoundaryChange}></cds-number-input>
             <p>x +</p>
-            <cds-number-input name="intercept" label="ordonnée" min="-1000" max="1000" .value=${String(this._intercept)} step="1" @cds-number-input=${this.onBoundaryChange}></cds-number-input>
+            <cds-number-input name="intercept" label="ordonnée" min="-1000" max="1000" .value=${String(this._intercept)}
+                              step="1" @cds-number-input=${this.onBoundaryChange}></cds-number-input>
           </div>
         </cds-accordion-item>
 
-        <cds-accordion-item title="Ajout de points" id="classification-add-points-item">
-          <cds-number-input name="count" label="nombre de points" min="1" max="1000" .value=${String(this._addPointsCount)} step="1" @cds-number-input=${(e: Event) => this._addPointsCount = parseInt((e.target as HTMLInputElement).value)}></cds-number-input>
-          <cds-button type="button" appearance="primary" ?disabled=${this._busy} @click=${this.onAddPoints}>Ajouter</cds-button>
+        <cds-accordion-item title="Ajout de points" id="classification-add-points-item" ?open=${this._allExpanded}>
+          <cds-number-input name="count" label="nombre de points" min="1" max="1000"
+                            .value=${String(this._addPointsCount)} step="1" @cds-number-input=${(e: CustomEvent<{
+            value: string
+          }>) => this._addPointsCount = parseInt(e.detail.value)}></cds-number-input>
+          <cds-button type="button" appearance="primary" ?disabled=${this._busy} @click=${this.onAddPoints}>Ajouter
+          </cds-button>
         </cds-accordion-item>
 
-        <cds-accordion-item title="Entrainement" id="classification-training-item">
-          <cds-number-input name="count" label="nombre de points" min="1" max="1000" .value=${String(this._epochCount)} step="1" @cds-number-input=${(e: Event) => this._epochCount = parseInt((e.target as HTMLInputElement).value)}></cds-number-input>
-          <cds-button type="button" appearance="primary" ?disabled=${this._busy} @click=${this.onTrain}>Entrainer</cds-button>
+        <cds-accordion-item title="Entrainement" id="classification-training-item" ?open=${this._allExpanded}>
+          <cds-number-input name="count" label="nombre de points" min="1" max="1000" .value=${String(this._epochCount)}
+                            step="1" @cds-number-input=${(e: CustomEvent<{
+            value: string
+          }>) => this._epochCount = parseInt(e.detail.value)}></cds-number-input>
+          <cds-button type="button" appearance="primary" ?disabled=${this._busy} @click=${this.onTrain}>Entrainer
+          </cds-button>
         </cds-accordion-item>
 
-        <cds-accordion-item title="Remise à zéro" id="classification-reset-item">
-          <cds-button type="button" appearance="primary" ?disabled=${this._busy} @click=${this.onReset}>Remettre à zéro</cds-button>
+        <cds-accordion-item title="Remise à zéro" id="classification-reset-item" ?open=${this._allExpanded}>
+          <cds-button type="button" appearance="primary" ?disabled=${this._busy} @click=${this.onReset}>Remettre à
+            zéro
+          </cds-button>
         </cds-accordion-item>
 
       </cds-accordion>
