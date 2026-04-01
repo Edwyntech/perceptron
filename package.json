@@ -1,0 +1,33 @@
+{
+  "name": "perceptron-ui",
+  "module": "src/main/frontend/index.ts",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "cem": "cem analyze --config src/main/frontend/cem.js",
+    "dev": "vite src/main/frontend",
+    "build": "vite build src/main/frontend --outDir=../../../target/classes/static --sourcemap=inline --emptyOutDir=true",
+    "build:watch": "npm run build -- --watch"
+  },
+  "dependencies": {
+    "@carbon/charts": "latest",
+    "@carbon/icons": "latest",
+    "@carbon/layout": "latest",
+    "@carbon/styles": "latest",
+    "@carbon/type": "latest",
+    "@carbon/web-components": "latest",
+    "sass-embedded": "latest"
+  },
+  "devDependencies": {
+    "@custom-elements-manifest/analyzer": "latest",
+    "@mordech/vite-lit-loader": "latest",
+    "@web-types/lit": "latest",
+    "custom-element-jet-brains-integration": "latest",
+    "vite": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "latest"
+  },
+  "customElements": "src/main/frontend/custom-elements.json",
+  "web-types": "src/main/frontend/web-types.json"
+}

@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: perceptron
+logger:
+  level:
+    root: INFO

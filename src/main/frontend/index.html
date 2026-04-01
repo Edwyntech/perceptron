@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Edwyn Days | Perceptron</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+  <link rel="stylesheet" href="index.scss"/>
+  <script type="module" src="index.ts"></script>
+</head>
+
+<body class="app">
+
+<header>
+  <cds-header aria-label="Edwyn Days">
+    <cds-header-name href="javascript:void 0" prefix="Edwyn Days">[Perceptron]</cds-header-name>
+  </cds-header>
+</header>
+
+<main>
+  <aside class="toolbar">
+    <cds-button-set>
+      <cds-icon-button id="expand-all-btn" label="Tout déplier" size="sm" kind="ghost">
+        <cds-icon slot="icon" id="expand-all-icon"></cds-icon>
+      </cds-icon-button>
+      <cds-icon-button id="collapse-all-btn" label="Tout replier" size="sm" kind="ghost">
+        <cds-icon slot="icon" id="collapse-all-icon"></cds-icon>
+      </cds-icon-button>
+    </cds-button-set>
+
+    <cds-accordion>
+      <cds-accordion-item title="Equation de la droite: y = x" id="classification-line-item">
+        <div style="display: flex; flex-direction: row; align-items: center; gap: 10px;">
+          <p>y =</p>
+          <cds-number-input name="slope" label="pente" min="-100" max="100" value="1" step="1" style="width: 150px"></cds-number-input>
+          <p>x +</p>
+          <cds-number-input name="intercept" label="ordonnée" min="-1000" max="1000" value="0" step="1" style="width: 150px"></cds-number-input>
+        </div>
+      </cds-accordion-item>
+      <cds-accordion-item title="Ajout de points" id="classification-add-points-item">
+        <cds-number-input name="count" label="nombre de points" min="1" max="1000" value="100" step="1"></cds-number-input>
+        <cds-button type="button" appearance="primary">Ajouter</cds-button>
+      </cds-accordion-item>
+      <cds-accordion-item title="Entrainement" id="classification-training-item">
+        <cds-number-input name="count" label="nombre de points" min="1" max="1000" value="100" step="1"></cds-number-input>
+        <cds-button type="button" appearance="primary">Entrainer</cds-button>
+      </cds-accordion-item>
+      <cds-accordion-item title="Remise à zéro" id="classification-reset-item">
+        <cds-button type="button" appearance="primary">Remettre à zéro</cds-button>
+      </cds-accordion-item>
+    </cds-accordion>
+  </aside>
+
+  <div id="chart-container"></div>
+
+</main>
+
+</body>
+</html>

@@ -1,0 +1,45 @@
+@use "@carbon/styles/scss/reset";
+@use "@carbon/styles/scss/theme";
+@use "@carbon/styles/scss/themes";
+@use '@carbon/type';
+@use '@carbon/layout';
+@use '@carbon/charts/scss/index.scss';
+@use '@carbon/styles/scss/components';
+@use '@carbon/styles/scss/components/button/tokens' as button-tokens;
+
+:root {
+  @include type.reset();
+  @include type.default-type();
+  @include type.type-classes();
+  @include theme.add-component-tokens(button-tokens.$button-tokens);
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+}
+
+.app {
+  display: grid;
+  grid-template-rows: layout.$spacing-09 1fr;
+  height: 100%;
+}
+
+main {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  grid-template-rows: 1fr;
+  gap: layout.$spacing-05;
+  padding: layout.$spacing-05;
+  min-height: 0;
+}
+
+.toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: layout.$spacing-05;
+}
+
+#chart-container {
+  min-height: 0;
+}

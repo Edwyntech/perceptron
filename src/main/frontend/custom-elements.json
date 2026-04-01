@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "1.0.0",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "src/main/frontend/chart-options.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "options",
+          "type": {
+            "text": "ComboChartOptions"
+          },
+          "default": "{ title: \"Classification\", axes: { left: { title: \"Y\", mapsTo: \"y\", scaleType: ScaleTypes.LINEAR, }, bottom: { title: \"X\", mapsTo: \"x\", scaleType: ScaleTypes.LINEAR, }, }, comboChartTypes: [ { type: \"scatter\", options: {}, correspondingDatasets: [\"Au-dessus\", \"En-dessous\"] }, { type: \"line\", options: {}, correspondingDatasets: [\"Classification\"] } ], legend: { alignment: \"center\", position: \"top\", }, height: \"100%\", }"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "options",
+          "declaration": {
+            "name": "options",
+            "module": "src/main/frontend/chart-options.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/main/frontend/index.ts",
+      "declarations": [],
+      "exports": []
+    }
+  ]
+}
