@@ -42,7 +42,7 @@
         <cds-button type="button" appearance="primary">Ajouter</cds-button>
       </cds-accordion-item>
       <cds-accordion-item title="Entrainement" id="classification-training-item">
-        <cds-number-input name="count" label="nombre de points" min="1" max="1000" value="100" step="1"></cds-number-input>
+        <cds-number-input name="count" label="nombre d'époques" min="1" max="1000" value="100" step="1"></cds-number-input>
         <cds-button type="button" appearance="primary">Entrainer</cds-button>
       </cds-accordion-item>
       <cds-accordion-item title="Remise à zéro" id="classification-reset-item">
@@ -51,6 +51,7 @@
     </cds-accordion>
   </aside>
 
+  <cds-toast-notification id="error-notification" kind="error" title="" subtitle="" low-contrast timeout="2000" style="display: none"></cds-toast-notification>
   <div id="chart-container"></div>
 
 </main>

@@ -43,3 +43,11 @@ main {
 #chart-container {
   min-height: 0;
 }
+
+#error-notification {
+  position: fixed;
+  top: layout.$spacing-09;
+  right: 0;
+  z-index: 9000;
+  width: 23rem;
+}
