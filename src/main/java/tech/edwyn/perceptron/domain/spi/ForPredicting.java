@@ -8,7 +8,7 @@ public interface ForPredicting {
 
   Line getPrediction();
 
-  Label predict(int x, int y);
+  Label predict(double x, double y);
 
   void reset();
 }

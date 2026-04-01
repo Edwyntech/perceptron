@@ -1,8 +1,8 @@
 package tech.edwyn.perceptron.domain;
 
-public record Line(int slope, int intercept) {
+public record Line(double slope, double intercept) {
 
   public static Line random() {
-    return new Line((int) (Math.random() * 5), (int) (Math.random() * 200));
+    return new Line(Math.random() * 5, Math.random() * 200);
   }
 }

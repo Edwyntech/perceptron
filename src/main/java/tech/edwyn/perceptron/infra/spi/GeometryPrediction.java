@@ -22,7 +22,7 @@ public class GeometryPrediction implements ForPredicting {
   }
 
   @Override
-  public Label predict(int x, int y) {
+  public Label predict(double x, double y) {
     return (y >= x * boundary.slope() + boundary.intercept())
       ? Label.ABOVE
       : Label.BELOW;
