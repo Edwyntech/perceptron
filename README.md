@@ -54,4 +54,5 @@ Pour itérer rapidement sur le frontend avec hot-reload :
 ```bash
 # Dans un terminal — backend
 mvn spring-boot:run
+npm run build:watch
 ```
