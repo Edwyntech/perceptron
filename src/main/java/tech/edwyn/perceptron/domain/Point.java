@@ -1,4 +1,4 @@
 package tech.edwyn.perceptron.domain;
 
-public record Point(int x, int y, Label label) {
+public record Point(double x, double y, Label label) {
 }

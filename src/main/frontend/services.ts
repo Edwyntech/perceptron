@@ -30,9 +30,26 @@ export class ApiClient {
     return response.json();
   }
 
+  async setLearningRate(learningRate: number): Promise<void> {
+    const params = new URLSearchParams({learningRate: String(learningRate)});
+    await fetch(`/perceptron/learning-rate?${params}`, {method: 'PUT'}).then(checkOk);
+  }
+
   async train(): Promise<Classification> {
     const response = await fetch('/classification/train', {method: 'POST'}).then(checkOk);
     return response.json();
   }
 
+  async getWeights(): Promise<Array<number>> {
+    const response = await fetch('/perceptron/weights', {method: 'GET'}).then(checkOk);
+    return response.json();
+  }
+
+  async getPrediction(): Promise<Line> {
+    const response = await fetch('/classification/prediction', {method: 'GET'}).then(checkOk);
+    return response.json();
+  }
+
 }
+
+export const apiClient = new ApiClient();

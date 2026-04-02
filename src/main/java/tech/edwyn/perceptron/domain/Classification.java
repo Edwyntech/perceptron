@@ -42,8 +42,8 @@ public class Classification {
   }
 
   public void addPoint() {
-    int x = random.nextInt(1000);
-    int y = random.nextInt(1000);
+    double x = random.nextDouble() * 2 - 1;
+    double y = random.nextDouble() * 2 - 1;
     Label label = forPredicting.predict(x, y);
     points.add(new Point(x, y, label));
   }

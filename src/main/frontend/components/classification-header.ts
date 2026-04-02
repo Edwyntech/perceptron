@@ -11,7 +11,10 @@ export class ClassificationHeader extends LitElement {
   override render() {
     return html`
       <cds-header aria-label="Edwyn Days">
-        <cds-header-name href="javascript:void 0" prefix="Edwyn Days">[Perceptron]</cds-header-name>
+        <cds-header-name href="javascript:void 0"
+                         prefix="Edwyn Days">
+          [Perceptron]
+        </cds-header-name>
       </cds-header>
     `;
   }

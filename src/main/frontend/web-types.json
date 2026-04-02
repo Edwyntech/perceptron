@@ -7,6 +7,56 @@
     "html": {
       "elements": [
         {
+          "name": "classification-add-points-item",
+          "description": "\n---\n\n\n### **Events:**\n - **classification**\n- **classification-error**",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "open",
+              "value": { "type": "boolean", "default": "false" }
+            }
+          ],
+          "events": [
+            { "name": "classification", "type": "ClassificationUpdatedEvent" },
+            { "name": "classification-error", "type": "CustomEvent" }
+          ],
+          "js": {
+            "properties": [{ "name": "open", "type": "boolean" }],
+            "events": [
+              {
+                "name": "classification",
+                "type": "ClassificationUpdatedEvent"
+              },
+              { "name": "classification-error", "type": "CustomEvent" }
+            ]
+          }
+        },
+        {
+          "name": "classification-boundary-item",
+          "description": "\n---\n\n\n### **Events:**\n - **classification**\n- **classification-error**",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "open",
+              "value": { "type": "boolean", "default": "false" }
+            }
+          ],
+          "events": [
+            { "name": "classification", "type": "ClassificationUpdatedEvent" },
+            { "name": "classification-error", "type": "CustomEvent" }
+          ],
+          "js": {
+            "properties": [{ "name": "open", "type": "boolean" }],
+            "events": [
+              {
+                "name": "classification",
+                "type": "ClassificationUpdatedEvent"
+              },
+              { "name": "classification-error", "type": "CustomEvent" }
+            ]
+          }
+        },
+        {
           "name": "classification-chart",
           "description": "\n---\n",
           "doc-url": "",
@@ -28,6 +78,44 @@
           "js": { "properties": [], "events": [] }
         },
         {
+          "name": "classification-perceptron",
+          "description": "\n---\n",
+          "doc-url": "",
+          "attributes": [],
+          "events": [],
+          "js": {
+            "properties": [
+              { "name": "classification", "type": "Classification | null" }
+            ],
+            "events": []
+          }
+        },
+        {
+          "name": "classification-reset-item",
+          "description": "\n---\n\n\n### **Events:**\n - **classification**\n- **classification-error**",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "open",
+              "value": { "type": "boolean", "default": "false" }
+            }
+          ],
+          "events": [
+            { "name": "classification", "type": "ClassificationUpdatedEvent" },
+            { "name": "classification-error", "type": "CustomEvent" }
+          ],
+          "js": {
+            "properties": [{ "name": "open", "type": "boolean" }],
+            "events": [
+              {
+                "name": "classification",
+                "type": "ClassificationUpdatedEvent"
+              },
+              { "name": "classification-error", "type": "CustomEvent" }
+            ]
+          }
+        },
+        {
           "name": "classification-toolbar",
           "description": "\n---\n",
           "doc-url": "",
@@ -35,10 +123,34 @@
           "events": [],
           "js": {
             "properties": [
-              { "name": "chartHolder", "type": "ClassificationChart" },
-              { "name": "notification", "type": "HTMLElement" }
+              { "name": "classification", "type": "Classification | null" }
             ],
             "events": []
+          }
+        },
+        {
+          "name": "classification-training-item",
+          "description": "\n---\n\n\n### **Events:**\n - **classification**\n- **classification-error**",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "open",
+              "value": { "type": "boolean", "default": "false" }
+            }
+          ],
+          "events": [
+            { "name": "classification", "type": "ClassificationUpdatedEvent" },
+            { "name": "classification-error", "type": "CustomEvent" }
+          ],
+          "js": {
+            "properties": [{ "name": "open", "type": "boolean" }],
+            "events": [
+              {
+                "name": "classification",
+                "type": "ClassificationUpdatedEvent"
+              },
+              { "name": "classification-error", "type": "CustomEvent" }
+            ]
           }
         }
       ]

@@ -4,7 +4,50 @@
   "modules": [
     {
       "kind": "javascript-module",
-      "path": "src/main/frontend/api-client.ts",
+      "path": "src/main/frontend/domain.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ClassificationUpdatedEvent",
+          "members": [
+            {
+              "kind": "field",
+              "name": "NAME",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "readonly": true,
+              "default": "'classification-updated'"
+            }
+          ],
+          "superclass": {
+            "name": "CustomEvent",
+            "module": "src/main/frontend/domain.ts"
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ClassificationUpdatedEvent",
+          "declaration": {
+            "name": "ClassificationUpdatedEvent",
+            "module": "src/main/frontend/domain.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/main/frontend/index.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/main/frontend/services.ts",
       "declarations": [
         {
           "kind": "class",
@@ -57,14 +100,54 @@
             },
             {
               "kind": "method",
+              "name": "setLearningRate",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "learningRate",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
               "name": "train",
               "return": {
                 "type": {
                   "text": "Promise<Classification>"
                 }
               }
+            },
+            {
+              "kind": "method",
+              "name": "getWeights",
+              "return": {
+                "type": {
+                  "text": "Promise<Array<number>>"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getPrediction",
+              "return": {
+                "type": {
+                  "text": "Promise<Line>"
+                }
+              }
             }
           ]
+        },
+        {
+          "kind": "variable",
+          "name": "apiClient",
+          "default": "new ApiClient()"
         }
       ],
       "exports": [
@@ -73,14 +156,356 @@
           "name": "ApiClient",
           "declaration": {
             "name": "ApiClient",
-            "module": "src/main/frontend/api-client.ts"
+            "module": "src/main/frontend/services.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "apiClient",
+          "declaration": {
+            "name": "apiClient",
+            "module": "src/main/frontend/services.ts"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/main/frontend/classification-chart.ts",
+      "path": "src/main/frontend/components/classification-add-points-item.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ClassificationAddPointsItem",
+          "members": [
+            {
+              "kind": "field",
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "open"
+            },
+            {
+              "kind": "field",
+              "name": "_addPointsCount",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "100"
+            },
+            {
+              "kind": "method",
+              "name": "onAddPoints",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_busy",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "protected",
+              "default": "false",
+              "inheritedFrom": {
+                "name": "ClassificationItemBase",
+                "module": "src/main/frontend/components/classification-item-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "notifyClassification",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "classification",
+                  "type": {
+                    "text": "Classification"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ClassificationItemBase",
+                "module": "src/main/frontend/components/classification-item-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "withAction",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "action",
+                  "type": {
+                    "text": "() => Promise<void>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ClassificationItemBase",
+                "module": "src/main/frontend/components/classification-item-base.ts"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "open"
+            }
+          ],
+          "superclass": {
+            "name": "ClassificationItemBase",
+            "module": "/src/main/frontend/components/classification-item-base.ts"
+          },
+          "tagName": "classification-add-points-item",
+          "customElement": true,
+          "events": [
+            {
+              "name": "classification",
+              "type": {
+                "text": "ClassificationUpdatedEvent"
+              },
+              "inheritedFrom": {
+                "name": "ClassificationItemBase",
+                "module": "src/main/frontend/components/classification-item-base.ts"
+              }
+            },
+            {
+              "name": "classification-error",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "inheritedFrom": {
+                "name": "ClassificationItemBase",
+                "module": "src/main/frontend/components/classification-item-base.ts"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ClassificationAddPointsItem",
+          "declaration": {
+            "name": "ClassificationAddPointsItem",
+            "module": "src/main/frontend/components/classification-add-points-item.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "classification-add-points-item",
+          "declaration": {
+            "name": "ClassificationAddPointsItem",
+            "module": "src/main/frontend/components/classification-add-points-item.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/main/frontend/components/classification-boundary-item.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ClassificationBoundaryItem",
+          "members": [
+            {
+              "kind": "field",
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "open"
+            },
+            {
+              "kind": "field",
+              "name": "_slope",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "1"
+            },
+            {
+              "kind": "field",
+              "name": "_intercept",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "_title",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "'Equation de la droite: y = x'"
+            },
+            {
+              "kind": "method",
+              "name": "onBoundaryChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "CustomEvent<{ value: string }>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "_busy",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "protected",
+              "default": "false",
+              "inheritedFrom": {
+                "name": "ClassificationItemBase",
+                "module": "src/main/frontend/components/classification-item-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "notifyClassification",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "classification",
+                  "type": {
+                    "text": "Classification"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ClassificationItemBase",
+                "module": "src/main/frontend/components/classification-item-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "withAction",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "action",
+                  "type": {
+                    "text": "() => Promise<void>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ClassificationItemBase",
+                "module": "src/main/frontend/components/classification-item-base.ts"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "open"
+            }
+          ],
+          "superclass": {
+            "name": "ClassificationItemBase",
+            "module": "/src/main/frontend/components/classification-item-base.ts"
+          },
+          "tagName": "classification-boundary-item",
+          "customElement": true,
+          "events": [
+            {
+              "name": "classification",
+              "type": {
+                "text": "ClassificationUpdatedEvent"
+              },
+              "inheritedFrom": {
+                "name": "ClassificationItemBase",
+                "module": "src/main/frontend/components/classification-item-base.ts"
+              }
+            },
+            {
+              "name": "classification-error",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "inheritedFrom": {
+                "name": "ClassificationItemBase",
+                "module": "src/main/frontend/components/classification-item-base.ts"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ClassificationBoundaryItem",
+          "declaration": {
+            "name": "ClassificationBoundaryItem",
+            "module": "src/main/frontend/components/classification-boundary-item.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "classification-boundary-item",
+          "declaration": {
+            "name": "ClassificationBoundaryItem",
+            "module": "src/main/frontend/components/classification-boundary-item.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/main/frontend/components/classification-chart.ts",
       "declarations": [
         {
           "kind": "class",
@@ -127,7 +552,7 @@
           "name": "ClassificationChart",
           "declaration": {
             "name": "ClassificationChart",
-            "module": "src/main/frontend/classification-chart.ts"
+            "module": "src/main/frontend/components/classification-chart.ts"
           }
         },
         {
@@ -135,14 +560,14 @@
           "name": "classification-chart",
           "declaration": {
             "name": "ClassificationChart",
-            "module": "src/main/frontend/classification-chart.ts"
+            "module": "src/main/frontend/components/classification-chart.ts"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/main/frontend/classification-header.ts",
+      "path": "src/main/frontend/components/classification-header.ts",
       "declarations": [
         {
           "kind": "class",
@@ -163,7 +588,7 @@
           "name": "ClassificationHeader",
           "declaration": {
             "name": "ClassificationHeader",
-            "module": "src/main/frontend/classification-header.ts"
+            "module": "src/main/frontend/components/classification-header.ts"
           }
         },
         {
@@ -171,134 +596,33 @@
           "name": "classification-header",
           "declaration": {
             "name": "ClassificationHeader",
-            "module": "src/main/frontend/classification-header.ts"
+            "module": "src/main/frontend/components/classification-header.ts"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/main/frontend/classification-toolbar.ts",
+      "path": "src/main/frontend/components/classification-item-base.ts",
       "declarations": [
         {
           "kind": "class",
           "description": "",
-          "name": "ClassificationToolbar",
+          "name": "ClassificationItemBase",
           "members": [
             {
               "kind": "field",
-              "name": "apiClient",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new ApiClient()"
-            },
-            {
-              "kind": "field",
-              "name": "chartHolder",
+              "name": "_busy",
               "type": {
-                "text": "ClassificationChart"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "notification",
-              "type": {
-                "text": "HTMLElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "lineItem",
-              "type": {
-                "text": "HTMLElement"
+                "text": "boolean"
               },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "resetButton",
-              "type": {
-                "text": "HTMLElement"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "addPointsButton",
-              "type": {
-                "text": "HTMLElement"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "trainButton",
-              "type": {
-                "text": "HTMLElement"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "addPointsCountInput",
-              "type": {
-                "text": "HTMLInputElement"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "epochCountInput",
-              "type": {
-                "text": "HTMLInputElement"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "slopeInput",
-              "type": {
-                "text": "HTMLInputElement"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "interceptInput",
-              "type": {
-                "text": "HTMLInputElement"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "expandAllIcon",
-              "type": {
-                "text": "HTMLElement"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "collapseAllIcon",
-              "type": {
-                "text": "HTMLElement"
-              },
-              "privacy": "private"
+              "privacy": "protected",
+              "default": "false"
             },
             {
               "kind": "method",
-              "name": "getClassification",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "Promise<void>"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "updateClassification",
+              "name": "notifyClassification",
+              "privacy": "protected",
               "return": {
                 "type": {
                   "text": "void"
@@ -315,55 +639,8 @@
             },
             {
               "kind": "method",
-              "name": "showError",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "message",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "field",
-              "name": "allButtons",
-              "type": {
-                "text": "HTMLElement[]"
-              },
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "method",
-              "name": "disableButtons",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "enableButtons",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "withButtons",
-              "privacy": "private",
+              "name": "withAction",
+              "privacy": "protected",
               "return": {
                 "type": {
                   "text": "Promise<void>"
@@ -377,36 +654,156 @@
                   }
                 }
               ]
+            }
+          ],
+          "events": [
+            {
+              "name": "classification",
+              "type": {
+                "text": "ClassificationUpdatedEvent"
+              }
+            },
+            {
+              "name": "classification-error",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ClassificationItemBase",
+          "declaration": {
+            "name": "ClassificationItemBase",
+            "module": "src/main/frontend/components/classification-item-base.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/main/frontend/components/classification-perceptron.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ClassificationPerceptron",
+          "members": [
+            {
+              "kind": "field",
+              "name": "classification",
+              "type": {
+                "text": "Classification | null"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_classification",
+              "type": {
+                "text": "Classification | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_weights",
+              "type": {
+                "text": "number[]"
+              },
+              "privacy": "private",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "_prediction",
+              "type": {
+                "text": "Line | null"
+              },
+              "privacy": "private",
+              "default": "null"
             },
             {
               "kind": "method",
-              "name": "onBoundaryChange",
+              "name": "_refreshWeights",
               "privacy": "private",
               "return": {
                 "type": {
-                  "text": "void"
+                  "text": "Promise<void>"
                 }
               }
             },
             {
               "kind": "method",
-              "name": "onExpandAll",
+              "name": "formatWeight",
               "privacy": "private",
               "return": {
                 "type": {
-                  "text": "void"
+                  "text": "string"
                 }
-              }
-            },
+              },
+              "parameters": [
+                {
+                  "name": "w",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "classification-perceptron",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ClassificationPerceptron",
+          "declaration": {
+            "name": "ClassificationPerceptron",
+            "module": "src/main/frontend/components/classification-perceptron.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "classification-perceptron",
+          "declaration": {
+            "name": "ClassificationPerceptron",
+            "module": "src/main/frontend/components/classification-perceptron.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/main/frontend/components/classification-reset-item.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ClassificationResetItem",
+          "members": [
             {
-              "kind": "method",
-              "name": "onCollapseAll",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
+              "kind": "field",
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "open"
             },
             {
               "kind": "method",
@@ -419,24 +816,159 @@
               }
             },
             {
-              "kind": "method",
-              "name": "onAddPoints",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
+              "kind": "field",
+              "name": "_busy",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "protected",
+              "default": "false",
+              "inheritedFrom": {
+                "name": "ClassificationItemBase",
+                "module": "src/main/frontend/components/classification-item-base.ts"
               }
             },
             {
               "kind": "method",
-              "name": "onTrain",
-              "privacy": "private",
+              "name": "notifyClassification",
+              "privacy": "protected",
               "return": {
                 "type": {
                   "text": "void"
                 }
+              },
+              "parameters": [
+                {
+                  "name": "classification",
+                  "type": {
+                    "text": "Classification"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ClassificationItemBase",
+                "module": "src/main/frontend/components/classification-item-base.ts"
               }
+            },
+            {
+              "kind": "method",
+              "name": "withAction",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "action",
+                  "type": {
+                    "text": "() => Promise<void>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ClassificationItemBase",
+                "module": "src/main/frontend/components/classification-item-base.ts"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "open"
+            }
+          ],
+          "superclass": {
+            "name": "ClassificationItemBase",
+            "module": "/src/main/frontend/components/classification-item-base.ts"
+          },
+          "tagName": "classification-reset-item",
+          "customElement": true,
+          "events": [
+            {
+              "name": "classification",
+              "type": {
+                "text": "ClassificationUpdatedEvent"
+              },
+              "inheritedFrom": {
+                "name": "ClassificationItemBase",
+                "module": "src/main/frontend/components/classification-item-base.ts"
+              }
+            },
+            {
+              "name": "classification-error",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "inheritedFrom": {
+                "name": "ClassificationItemBase",
+                "module": "src/main/frontend/components/classification-item-base.ts"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ClassificationResetItem",
+          "declaration": {
+            "name": "ClassificationResetItem",
+            "module": "src/main/frontend/components/classification-reset-item.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "classification-reset-item",
+          "declaration": {
+            "name": "ClassificationResetItem",
+            "module": "src/main/frontend/components/classification-reset-item.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/main/frontend/components/classification-toolbar.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ClassificationToolbar",
+          "members": [
+            {
+              "kind": "field",
+              "name": "classification",
+              "type": {
+                "text": "Classification | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_allExpanded",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_onClassificationUpdated",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_onClassificationError",
+              "privacy": "private",
+              "readonly": true
             }
           ],
           "superclass": {
@@ -453,7 +985,7 @@
           "name": "ClassificationToolbar",
           "declaration": {
             "name": "ClassificationToolbar",
-            "module": "src/main/frontend/classification-toolbar.ts"
+            "module": "src/main/frontend/components/classification-toolbar.ts"
           }
         },
         {
@@ -461,22 +993,200 @@
           "name": "classification-toolbar",
           "declaration": {
             "name": "ClassificationToolbar",
-            "module": "src/main/frontend/classification-toolbar.ts"
+            "module": "src/main/frontend/components/classification-toolbar.ts"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/main/frontend/domain.ts",
-      "declarations": [],
-      "exports": []
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/main/frontend/index.ts",
-      "declarations": [],
-      "exports": []
+      "path": "src/main/frontend/components/classification-training-item.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ClassificationTrainingItem",
+          "members": [
+            {
+              "kind": "field",
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "open"
+            },
+            {
+              "kind": "field",
+              "name": "_testedCount",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "_epochCount",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "1000"
+            },
+            {
+              "kind": "field",
+              "name": "_learningRate",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0.01"
+            },
+            {
+              "kind": "method",
+              "name": "onLearningRateChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "onTrain",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_busy",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "protected",
+              "default": "false",
+              "inheritedFrom": {
+                "name": "ClassificationItemBase",
+                "module": "src/main/frontend/components/classification-item-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "notifyClassification",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "classification",
+                  "type": {
+                    "text": "Classification"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ClassificationItemBase",
+                "module": "src/main/frontend/components/classification-item-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "withAction",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "action",
+                  "type": {
+                    "text": "() => Promise<void>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ClassificationItemBase",
+                "module": "src/main/frontend/components/classification-item-base.ts"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "open"
+            }
+          ],
+          "superclass": {
+            "name": "ClassificationItemBase",
+            "module": "/src/main/frontend/components/classification-item-base.ts"
+          },
+          "tagName": "classification-training-item",
+          "customElement": true,
+          "events": [
+            {
+              "name": "classification",
+              "type": {
+                "text": "ClassificationUpdatedEvent"
+              },
+              "inheritedFrom": {
+                "name": "ClassificationItemBase",
+                "module": "src/main/frontend/components/classification-item-base.ts"
+              }
+            },
+            {
+              "name": "classification-error",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "inheritedFrom": {
+                "name": "ClassificationItemBase",
+                "module": "src/main/frontend/components/classification-item-base.ts"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ClassificationTrainingItem",
+          "declaration": {
+            "name": "ClassificationTrainingItem",
+            "module": "src/main/frontend/components/classification-training-item.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "classification-training-item",
+          "declaration": {
+            "name": "ClassificationTrainingItem",
+            "module": "src/main/frontend/components/classification-training-item.ts"
+          }
+        }
+      ]
     }
   ]
 }

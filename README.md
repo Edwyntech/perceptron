@@ -53,10 +53,6 @@ Pour itérer rapidement sur le frontend avec hot-reload :
 ```bash
 # Dans un terminal — backend
 mvn spring-boot:run
-
-# Dans un autre terminal — frontend
-npm install
-npm run dev
 ```
 
 Le serveur Vite démarre sur [http://localhost:5173](http://localhost:5173).

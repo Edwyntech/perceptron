@@ -1,14 +1,14 @@
 import {LitElement, html} from 'lit';
 import {customElement, property, query} from 'lit/decorators.js';
 import {ChartTabularData, ComboChart, ComboChartOptions, ScaleTypes} from '@carbon/charts';
-import {Classification} from './domain.ts';
+import {Classification} from '../domain.ts';
 
 const GROUP_CLASSIFICATION = 'Limite';
 const GROUP_PREDICTION = 'Prédiction';
 const GROUP_ABOVE = 'Au-dessus';
 const GROUP_BELOW = 'En-dessous';
-const AREA_MIN = 0;
-const AREA_MAX = 1000;
+const AREA_MIN = -1;
+const AREA_MAX = 1;
 
 const xAtY = (y: number, slope: number, intercept: number) => (y - intercept) / slope;
 

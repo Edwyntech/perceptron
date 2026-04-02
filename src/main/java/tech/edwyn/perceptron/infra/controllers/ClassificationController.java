@@ -3,7 +3,6 @@ package tech.edwyn.perceptron.infra.controllers;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import tech.edwyn.perceptron.domain.Classification;
 import tech.edwyn.perceptron.domain.Line;
@@ -45,6 +44,11 @@ public class ClassificationController {
   public Classification train() {
     classification.train();
     return classification;
+  }
+
+  @GetMapping("/prediction")
+  public Line getPrediction() {
+    return classification.getPrediction();
   }
 
 }
