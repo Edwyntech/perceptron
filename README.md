@@ -1,10 +1,11 @@
 # Perceptron
 
-Visualisation interactive d'un perceptron simple : l'utilisateur définit une droite de séparation, ajoute des points et entraîne le modèle à les classifier (ABOVE / BELOW).
+Visualisation interactive d'un perceptron simple : l'utilisateur définit une droite de séparation, ajoute des points et
+entraîne le modèle à les classifier (ABOVE / BELOW).
 
 ## Stack
 
-- **Backend** : Java 25, Spring Boot 4, architecture hexagonale (`domain` / `infra`)
+- **Backend** : Java 25, Spring Boot 4
 - **Frontend** : TypeScript, Lit (Web Components), Carbon Design System, Vite
 - **Build** : Maven (le build frontend est intégré via `frontend-maven-plugin`)
 
@@ -22,13 +23,13 @@ src/main/frontend/   # Application Lit (Web Components)
 
 ## API REST
 
-| Méthode | Endpoint                    | Description                        |
-|---------|-----------------------------|------------------------------------|
-| GET     | `/classification`           | État courant (points + prédiction) |
-| POST    | `/classification/boundary`  | Définir la droite de référence     |
-| POST    | `/classification/points`    | Ajouter un point aléatoire         |
-| POST    | `/classification/train`     | Effectuer une itération d'entraînement |
-| POST    | `/classification/reset`     | Réinitialiser                      |
+| Méthode | Endpoint                   | Description                            |
+|---------|----------------------------|----------------------------------------|
+| GET     | `/classification`          | État courant (points + prédiction)     |
+| POST    | `/classification/boundary` | Définir la droite de référence         |
+| POST    | `/classification/points`   | Ajouter un point aléatoire             |
+| POST    | `/classification/train`    | Effectuer une itération d'entraînement |
+| POST    | `/classification/reset`    | Réinitialiser                          |
 
 ## Prérequis
 
@@ -54,5 +55,3 @@ Pour itérer rapidement sur le frontend avec hot-reload :
 # Dans un terminal — backend
 mvn spring-boot:run
 ```
-
-Le serveur Vite démarre sur [http://localhost:5173](http://localhost:5173).
