@@ -4,7 +4,6 @@ spring:
   devtools:
     restart:
       additional-paths: target/classes/static
-      exclude: META-INF/maven/**,META-INF/resources/**,resources/**,public/**,templates/**
 logging:
   level:
     root: INFO

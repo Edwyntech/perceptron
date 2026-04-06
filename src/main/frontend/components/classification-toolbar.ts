@@ -66,19 +66,23 @@ export class ClassificationToolbar extends LitElement {
                          size="sm"
                          kind="ghost"
                          @click=${() => this._allExpanded = true}>
-          <cds-icon slot="icon" .icon=${ExpandAll}></cds-icon>
+          <cds-icon slot="icon" .icon=${ExpandAll}>
+          </cds-icon>
         </cds-icon-button>
       </cds-button-set>
 
       <cds-accordion>
-        <classification-boundary-item ?open=${this._allExpanded}></classification-boundary-item>
-        <classification-add-points-item ?open=${this._allExpanded}></classification-add-points-item>
-        <classification-training-item ?open=${this._allExpanded}></classification-training-item>
-        <classification-reset-item ?open=${this._allExpanded}></classification-reset-item>
+        <classification-boundary-item ?open=${this._allExpanded}>
+        </classification-boundary-item>
+        <classification-add-points-item ?open=${this._allExpanded}>
+        </classification-add-points-item>
+        <classification-training-item ?open=${this._allExpanded}>
+        </classification-training-item>
+        <classification-reset-item ?open=${this._allExpanded}>
+        </classification-reset-item>
       </cds-accordion>
 
-      <classification-perceptron
-        .classification=${this.classification}>
+      <classification-perceptron .classification=${this.classification}>
       </classification-perceptron>
     `;
   }

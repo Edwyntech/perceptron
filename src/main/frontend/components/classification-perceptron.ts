@@ -74,7 +74,7 @@ export class ClassificationPerceptron extends LitElement {
         ${svg`
           <svg width="100%" viewBox="0 0 ${vw} ${vh}"
                xmlns="http://www.w3.org/2000/svg"
-               style="font-family: 'Georgia', serif; overflow: visible;">
+               style="overflow: visible;">
 
             <defs>
               <!-- blue arrowhead -->
@@ -182,7 +182,7 @@ export class ClassificationPerceptron extends LitElement {
             <!-- ── Predicted boundary line equation ── -->
             <text x="${vw / 2}" y="${vh - 10}"
                   text-anchor="middle" font-size="30" font-weight="bold" fill="#333" font-style="italic">
-              Boundary: y = ${this._prediction ? this.formatWeight(this._prediction.slope) : '?'} x + ${this._prediction ? this.formatWeight(this._prediction.intercept) : '?'}
+              Limite: y = ${this._prediction ? this.formatWeight(this._prediction.slope) : '?'} x + ${this._prediction ? this.formatWeight(this._prediction.intercept) : '?'}
             </text>
           </svg>
         `}
