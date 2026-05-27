@@ -37,9 +37,9 @@ export class ClassificationBoundaryItem extends ClassificationItemBase {
       .catch(console.error);
   }
 
-  private onBoundaryChange(e: CustomEvent<{ value: string }>): void {
-    const input = e.target as HTMLElement;
-    const parsed = parseFloat(e.detail.value);
+  private onBoundaryChange(e: Event): void {
+    const input = e.target as HTMLInputElement;
+    const parsed = parseFloat(input.value);
     if (isNaN(parsed)) return;
     if (input.getAttribute('name') === 'slope') this._slope = parsed;
     else if (input.getAttribute('name') === 'intercept') this._intercept = parsed;
@@ -57,18 +57,23 @@ export class ClassificationBoundaryItem extends ClassificationItemBase {
       <cds-accordion-item .title=${this._title}
                           id="classification-line-item"
                           ?open=${this.open}>
-        <cds-number-input name="slope"
-                          label="pente"
-                          min="-10" max="10" step="1"
-                          .value=${String(this._slope)}
-                          @cds-number-input=${this.onBoundaryChange}>
-        </cds-number-input>
-        <cds-number-input name="intercept"
-                          label="ordonnée"
-                          min="-5" max="5" step="1"
-                          .value=${String(this._intercept)}
-                          @cds-number-input=${this.onBoundaryChange}>
-        </cds-number-input>
+        <div class="inline-equation">
+          <span class="equation-text">y =</span>
+          <input type="number"
+                 name="slope"
+                 class="eq-input"
+                 min="-10" max="10" step="1"
+                 .value=${String(this._slope)}
+                 @input=${this.onBoundaryChange}>
+          <span class="equation-text">x</span>
+          <span class="equation-text" style="visibility: ${this._intercept >= 0 ? 'visible' : 'hidden'}">+</span>
+          <input type="number"
+                 name="intercept"
+                 class="eq-input"
+                 min="-5" max="5" step="1"
+                 .value=${String(this._intercept)}
+                 @input=${this.onBoundaryChange}>
+        </div>
       </cds-accordion-item>
     `;
   }

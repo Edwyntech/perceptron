@@ -25,8 +25,13 @@ export class ApiClient {
     return response.json();
   }
 
-  async addPoint(): Promise<Classification> {
-    const response = await fetch('/classification/points', {method: 'POST'}).then(checkOk);
+  async addPoints(count: number, xMin?: number, xMax?: number, yMin?: number, yMax?: number): Promise<Classification> {
+    const params = new URLSearchParams({count: String(count)});
+    if (xMin !== undefined) params.append('xMin', String(xMin));
+    if (xMax !== undefined) params.append('xMax', String(xMax));
+    if (yMin !== undefined) params.append('yMin', String(yMin));
+    if (yMax !== undefined) params.append('yMax', String(yMax));
+    const response = await fetch('/classification/points', {method: 'POST', body: params}).then(checkOk);
     return response.json();
   }
 
@@ -38,6 +43,39 @@ export class ApiClient {
   async train(): Promise<Classification> {
     const response = await fetch('/classification/train', {method: 'POST'}).then(checkOk);
     return response.json();
+  }
+
+  trainStream(
+    epochs: number,
+    delayMs: number,
+    onUpdate: (update: { prediction: Line; weights: number[]; converged: boolean }) => void,
+    onComplete: () => void,
+    onError: (error: any) => void
+  ): () => void {
+    const eventSource = new EventSource(`/classification/train-stream?epochs=${epochs}&delayMs=${delayMs}`);
+
+    eventSource.addEventListener('update', (event: MessageEvent) => {
+      try {
+        const update = JSON.parse(event.data) as { prediction: Line; weights: number[]; converged: boolean };
+        onUpdate(update);
+      } catch (err) {
+        onError(err);
+      }
+    });
+
+    eventSource.addEventListener('complete', () => {
+      eventSource.close();
+      onComplete();
+    });
+
+    eventSource.addEventListener('error', (event) => {
+      eventSource.close();
+      onError(event);
+    });
+
+    return () => {
+      eventSource.close();
+    };
   }
 
   async getWeights(): Promise<Array<number>> {

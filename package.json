@@ -28,7 +28,7 @@
   },
   "peerDependencies": {
     "typescript": "latest"
-  }, 
+  },
   "customElements": "src/main/frontend/custom-elements.json",
   "web-types": "src/main/frontend/web-types.json"
 }

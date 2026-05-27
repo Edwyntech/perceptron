@@ -15,6 +15,7 @@ export type Classification = {
   boundary: Line;
   prediction: Line | null;
   points: Point[];
+  weights?: number[];
 };
 
 export class ClassificationUpdatedEvent extends CustomEvent<Classification> {

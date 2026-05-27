@@ -21,7 +21,10 @@
             { "name": "classification-error", "type": "CustomEvent" }
           ],
           "js": {
-            "properties": [{ "name": "open", "type": "boolean" }],
+            "properties": [
+              { "name": "open", "type": "boolean" },
+              { "name": "classification", "type": "Classification | null" }
+            ],
             "events": [
               {
                 "name": "classification",
@@ -71,11 +74,42 @@
         },
         {
           "name": "classification-header",
-          "description": "\n---\n",
+          "description": "\n---\n\n\n### **Events:**\n - **tab-changed**",
           "doc-url": "",
-          "attributes": [],
-          "events": [],
-          "js": { "properties": [], "events": [] }
+          "attributes": [
+            {
+              "name": "activeTab",
+              "value": { "type": "string", "default": "'entrainement'" }
+            }
+          ],
+          "events": [{ "name": "tab-changed", "type": "CustomEvent" }],
+          "js": {
+            "properties": [{ "name": "activeTab", "type": "string" }],
+            "events": [{ "name": "tab-changed", "type": "CustomEvent" }]
+          }
+        },
+        {
+          "name": "classification-manual-config",
+          "description": "\n---\n\n\n### **Events:**\n - **manual-config-changed**",
+          "doc-url": "",
+          "attributes": [
+            { "name": "w1", "value": { "type": "number", "default": "0.5" } },
+            { "name": "w2", "value": { "type": "number", "default": "-0.5" } },
+            { "name": "bias", "value": { "type": "number", "default": "0.1" } }
+          ],
+          "events": [
+            { "name": "manual-config-changed", "type": "CustomEvent" }
+          ],
+          "js": {
+            "properties": [
+              { "name": "w1", "type": "number" },
+              { "name": "w2", "type": "number" },
+              { "name": "bias", "type": "number" }
+            ],
+            "events": [
+              { "name": "manual-config-changed", "type": "CustomEvent" }
+            ]
+          }
         },
         {
           "name": "classification-perceptron",
@@ -85,47 +119,43 @@
           "events": [],
           "js": {
             "properties": [
-              { "name": "classification", "type": "Classification | null" }
+              { "name": "classification", "type": "Classification | null" },
+              { "name": "weights", "type": "number[] | null" },
+              { "name": "prediction", "type": "Line | null" }
             ],
             "events": []
           }
         },
         {
-          "name": "classification-reset-item",
-          "description": "\n---\n\n\n### **Events:**\n - **classification**\n- **classification-error**",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "open",
-              "value": { "type": "boolean", "default": "false" }
-            }
-          ],
-          "events": [
-            { "name": "classification", "type": "ClassificationUpdatedEvent" },
-            { "name": "classification-error", "type": "CustomEvent" }
-          ],
-          "js": {
-            "properties": [{ "name": "open", "type": "boolean" }],
-            "events": [
-              {
-                "name": "classification",
-                "type": "ClassificationUpdatedEvent"
-              },
-              { "name": "classification-error", "type": "CustomEvent" }
-            ]
-          }
-        },
-        {
-          "name": "classification-toolbar",
+          "name": "classification-static",
           "description": "\n---\n",
           "doc-url": "",
           "attributes": [],
           "events": [],
           "js": {
             "properties": [
-              { "name": "classification", "type": "Classification | null" }
+              { "name": "_classification", "type": "Classification" }
             ],
             "events": []
+          }
+        },
+        {
+          "name": "classification-toolbar",
+          "description": "\n---\n\n\n### **Events:**\n - **c**\n- **classification-error**",
+          "doc-url": "",
+          "attributes": [],
+          "events": [
+            { "name": "c", "type": "ClassificationUpdatedEvent" },
+            { "name": "classification-error", "type": "CustomEvent" }
+          ],
+          "js": {
+            "properties": [
+              { "name": "classification", "type": "Classification | null" }
+            ],
+            "events": [
+              { "name": "c", "type": "ClassificationUpdatedEvent" },
+              { "name": "classification-error", "type": "CustomEvent" }
+            ]
           }
         },
         {
@@ -143,7 +173,10 @@
             { "name": "classification-error", "type": "CustomEvent" }
           ],
           "js": {
-            "properties": [{ "name": "open", "type": "boolean" }],
+            "properties": [
+              { "name": "open", "type": "boolean" },
+              { "name": "classification", "type": "Classification | null" }
+            ],
             "events": [
               {
                 "name": "classification",

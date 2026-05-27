@@ -2,6 +2,7 @@ import {html} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {apiClient} from '../services.ts';
 import {ClassificationItemBase} from './classification-item-base.ts';
+import {Classification} from '../domain.ts';
 
 @customElement('classification-add-points-item')
 export class ClassificationAddPointsItem extends ClassificationItemBase {
@@ -9,8 +10,11 @@ export class ClassificationAddPointsItem extends ClassificationItemBase {
   @property({type: Boolean})
   open = false;
 
+  @property({attribute: false})
+  classification: Classification | null = null;
+
   @state()
-  private _addPointsCount = 100;
+  private _addPointsCount = 1000;
 
   protected override async firstUpdated(): Promise<void> {
     await apiClient.getClassification()
@@ -19,13 +23,38 @@ export class ClassificationAddPointsItem extends ClassificationItemBase {
   }
 
   private onAddPoints(): void {
+    if (this._busy) return;
+
     const count = this._addPointsCount;
-    this.withAction(async () => {
-      let promise = Promise.resolve();
-      for (let i = 0; i < count; i++) {
-        promise = promise.then(() => apiClient.addPoint().then(c => this.notifyClassification(c)));
+    let xMin = -1;
+    let xMax = 1;
+    let yMin = -1;
+    let yMax = 1;
+
+    if (this.classification) {
+      const points = this.classification.points;
+      if (points && points.length > 0) {
+        for (const element of points) {
+          const p = element;
+          if (p.x < xMin) xMin = p.x;
+          if (p.x > xMax) xMax = p.x;
+          if (p.y < yMin) yMin = p.y;
+          if (p.y > yMax) yMax = p.y;
+        }
       }
-      await promise;
+
+      if (this.classification.boundary) {
+        const yBoundaryMin = this.classification.boundary.slope * xMin + this.classification.boundary.intercept;
+        const yBoundaryMax = this.classification.boundary.slope * xMax + this.classification.boundary.intercept;
+        yMin = Math.min(yMin, yBoundaryMin, yBoundaryMax);
+        yMax = Math.max(yMax, yBoundaryMin, yBoundaryMax);
+      }
+    }
+
+    this.withAction(async () => {
+      const c = await apiClient.addPoints(count, xMin, xMax, yMin, yMax);
+      this.classification = c;
+      this.notifyClassification(c);
     });
   }
 
@@ -40,12 +69,14 @@ export class ClassificationAddPointsItem extends ClassificationItemBase {
                           .value=${String(this._addPointsCount)}
                           @cds-number-input=${(e: CustomEvent<{ value: string }>) => this._addPointsCount = parseInt(e.detail.value)}>
         </cds-number-input>
-        <cds-button type="button"
-                    appearance="primary"
-                    ?disabled=${this._busy}
-                    @click=${this.onAddPoints}>
-          Ajouter
-        </cds-button>
+        <div style="display: flex; justify-content: flex-end; margin-top: 1.25rem;">
+          <cds-button type="button"
+                      appearance="primary"
+                      ?disabled=${this._busy}
+                      @click=${this.onAddPoints}>
+            Ajouter
+          </cds-button>
+        </div>
       </cds-accordion-item>
     `;
   }

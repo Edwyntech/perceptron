@@ -13,8 +13,15 @@
   <classification-header></classification-header>
 </header>
 <main>
-  <classification-toolbar></classification-toolbar>
-  <classification-chart></classification-chart>
+  <div id="entrainement-view" class="view-content active">
+    <classification-toolbar></classification-toolbar>
+    <div class="chart-card-container">
+      <classification-chart></classification-chart>
+    </div>
+  </div>
+  <div id="statique-view" class="view-content">
+    <classification-static></classification-static>
+  </div>
 </main>
 <cds-toast-notification id="error-notification"
                         kind="error"

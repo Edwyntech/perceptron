@@ -23,6 +23,12 @@ export class ClassificationPerceptron extends LitElement {
   }
   private _classification: Classification | null = null;
 
+  @property({attribute: false})
+  weights: number[] | null = null;
+
+  @property({attribute: false})
+  prediction: Line | null = null;
+
   @state()
   private _weights: number[] = [];
 
@@ -30,8 +36,17 @@ export class ClassificationPerceptron extends LitElement {
   private _prediction: Line | null = null;
 
   private async _refreshWeights(): Promise<void> {
-    await apiClient.getWeights().then(w => this._weights = w).catch(console.error);
-    await apiClient.getPrediction().then(p => this._prediction = p).catch(console.error);
+    if (this.weights !== null && this.prediction !== null) return;
+    try {
+      if (this.weights === null) {
+        this._weights = await apiClient.getWeights();
+      }
+      if (this.prediction === null) {
+        this._prediction = await apiClient.getPrediction();
+      }
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   private formatWeight(w: number): string {
@@ -39,10 +54,11 @@ export class ClassificationPerceptron extends LitElement {
   }
 
   override render() {
-    const [w1 = 0, w2 = 0, bias = 0] = this._weights;
+    const [w1 = 0, w2 = 0, bias = 0] = this.weights !== null ? this.weights : this._weights;
+    const pred = this.prediction !== null ? this.prediction : this._prediction;
 
     // Layout constants
-    const vw = 600;
+    const vw = 510;
     const vh = 310;
 
     const inputX = 55;
@@ -62,7 +78,7 @@ export class ClassificationPerceptron extends LitElement {
     const biasY = 230;
     const biasR = 22;
 
-    const outputEndX = 560;
+    const outputEndX = 460;
 
     // Arrow marker colours
     const arrowBlue = '#4a6fa5';
@@ -70,11 +86,12 @@ export class ClassificationPerceptron extends LitElement {
     const arrowOrange = '#c07020';
 
     return html`
-      <div style="margin-top: 1rem;">
+      <div class="control-card" style="margin-top: 1rem;">
+        <h3>Réseau de neurones</h3>
         ${svg`
-          <svg width="100%" viewBox="0 0 ${vw} ${vh}"
+          <svg viewBox="0 0 ${vw} ${vh}"
                xmlns="http://www.w3.org/2000/svg"
-               style="overflow: visible;">
+               style="display: block; margin: 0 auto; max-width: 100%; width: ${vw}; overflow: visible;">
 
             <defs>
               <!-- blue arrowhead -->
@@ -132,7 +149,7 @@ export class ClassificationPerceptron extends LitElement {
                   marker-end="url(#arrow-orange)"/>
             <!-- output label ŷ -->
             <text x="${outputEndX + 8}" y="${stepY + 5}"
-                  font-size="16" font-weight="bold" fill="${arrowOrange}" font-style="italic">&#x1D4CE;</text>
+                  font-size="16" font-weight="bold" fill="${arrowOrange}" font-style="italic">ŷ</text>
 
             <!-- ── Input nodes (blue-purple) ── -->
             <circle cx="${inputX}" cy="${x1Y}" r="${nodeR}"
@@ -181,8 +198,8 @@ export class ClassificationPerceptron extends LitElement {
 
             <!-- ── Predicted boundary line equation ── -->
             <text x="${vw / 2}" y="${vh - 10}"
-                  text-anchor="middle" font-size="30" font-weight="bold" fill="#333" font-style="italic">
-              Limite: y = ${this._prediction ? this.formatWeight(this._prediction.slope) : '?'} x + ${this._prediction ? this.formatWeight(this._prediction.intercept) : '?'}
+                  text-anchor="middle" font-size="20" font-weight="bold" fill="#333" font-style="italic">
+              Prédiction: y = ${pred ? this.formatWeight(pred.slope) : '?'} x + ${pred ? this.formatWeight(pred.intercept) : '?'}
             </text>
           </svg>
         `}

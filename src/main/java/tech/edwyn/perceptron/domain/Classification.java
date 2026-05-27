@@ -2,59 +2,106 @@ package tech.edwyn.perceptron.domain;
 
 import tech.edwyn.perceptron.domain.spi.ForPredicting;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
-import java.util.Set;
-
-import static java.util.stream.Collectors.toSet;
 
 public class Classification {
   private static final Random random = new Random();
   private final ForPredicting forPredicting;
   private Line boundary;
-  private Set<Point> points = new HashSet<>();
+  private final List<Point> points = new ArrayList<>();
+  private int currentPointIndex = 0;
 
   public Classification(ForPredicting forPredicting) {
     this.forPredicting = forPredicting;
     reset();
   }
 
-  public Line getBoundary() {
+  public synchronized Line getBoundary() {
     return boundary;
   }
 
-  public void setBoundary(Line boundary) {
+  public synchronized void setBoundary(Line boundary) {
     this.boundary = boundary;
   }
 
-  public Line getPrediction() {
+  public synchronized Line getPrediction() {
     return forPredicting.getPrediction();
   }
 
-  public Set<Point> getPoints() {
-    return points;
+  public synchronized List<Point> getPoints() {
+    return new ArrayList<>(points);
   }
 
-  public void reset() {
+  public synchronized double[] getWeights() {
+    return forPredicting.getWeights();
+  }
+
+  public synchronized void reset() {
     forPredicting.reset();
     this.boundary = new Line(1, 0);
     this.points.clear();
+    this.currentPointIndex = 0;
   }
 
-  public void addPoint() {
-    double x = random.nextDouble() * 2 - 1;
-    double y = random.nextDouble() * 2 - 1;
+  public synchronized void addPoint() {
+    addPoint(null, null, null, null);
+  }
+
+  public synchronized void addPoint(Double xMin, Double xMax, Double yMin, Double yMax) {
+    double minX = xMin != null ? xMin : -1.0;
+    double maxX = xMax != null ? xMax : 1.0;
+    double minY = yMin != null ? yMin : -1.0;
+    double maxY = yMax != null ? yMax : 1.0;
+
+    double x = minX + random.nextDouble() * (maxX - minX);
+    double y = minY + random.nextDouble() * (maxY - minY);
     Label label = forPredicting.predict(x, y);
     points.add(new Point(x, y, label));
+    this.currentPointIndex = 0;
   }
 
-  public void train() {
-    forPredicting.train(boundary);
-    points = points.stream()
-                   .map(point -> {
-                     Label prediction = forPredicting.predict(point.x(), point.y());
-                     return new Point(point.x(), point.y(), prediction);
-                   })
-                   .collect(toSet());
+  public synchronized void addPoints(Double xMin, Double xMax, Double yMin, Double yMax, int count) {
+    for (int i = 0; i < count; i++) {
+      addPoint(xMin, xMax, yMin, yMax);
+    }
+  }
+
+  public synchronized void shufflePoints() {
+    java.util.Collections.shuffle(this.points, random);
+    this.currentPointIndex = 0;
+  }
+
+  public synchronized boolean train() {
+    if (points.isEmpty()) {
+      forPredicting.train(boundary);
+      return false;
+    } else {
+      if (currentPointIndex >= points.size()) {
+        shufflePoints();
+      }
+      Point point = points.get(currentPointIndex);
+      forPredicting.train(point, boundary);
+      currentPointIndex++;
+
+      boolean converged = true;
+      for (Point p : points) {
+        Label prediction = forPredicting.predict(p.x(), p.y());
+        Label expected = (p.y() > p.x() * boundary.slope() + boundary.intercept()) ? Label.ABOVE : Label.BELOW;
+        if (prediction != expected) {
+          converged = false;
+        }
+      }
+      return converged;
+    }
+  }
+
+  public synchronized void updatePointLabels() {
+    for (int i = 0; i < points.size(); i++) {
+      Point p = points.get(i);
+      Label prediction = forPredicting.predict(p.x(), p.y());
+      points.set(i, new Point(p.x(), p.y(), prediction));
+    }
   }
 }
