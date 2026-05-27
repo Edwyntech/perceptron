@@ -43,6 +43,32 @@ const options: ComboChartOptions = {
   resizable: true,
 };
 
+function addIntersection(
+  points: { x: number; y: number }[],
+  x: number,
+  y: number,
+  x1: number,
+  x2: number,
+  y1: number,
+  y2: number
+): void {
+  const epsilon = 1e-9;
+  if (x >= x1 - epsilon && x <= x2 + epsilon && y >= y1 - epsilon && y <= y2 + epsilon) {
+    points.push({ x, y });
+  }
+}
+
+function getUniquePoints(points: { x: number; y: number }[]): { x: number; y: number }[] {
+  const unique: { x: number; y: number }[] = [];
+  const epsilon = 1e-7;
+  for (const p of points) {
+    if (!unique.some(up => Math.abs(up.x - p.x) < epsilon && Math.abs(up.y - p.y) < epsilon)) {
+      unique.push(p);
+    }
+  }
+  return unique;
+}
+
 function clipLineToRectangle(
   slope: number,
   intercept: number,
@@ -53,41 +79,15 @@ function clipLineToRectangle(
 ): { x: number; y: number }[] {
   const points: { x: number; y: number }[] = [];
 
-  // Check intersection with x = x1
-  const yAtX1 = slope * x1 + intercept;
-  if (yAtX1 >= y1 && yAtX1 <= y2) {
-    points.push({ x: x1, y: yAtX1 });
-  }
+  addIntersection(points, x1, slope * x1 + intercept, x1, x2, y1, y2);
+  addIntersection(points, x2, slope * x2 + intercept, x1, x2, y1, y2);
 
-  // Check intersection with x = x2
-  const yAtX2 = slope * x2 + intercept;
-  if (yAtX2 >= y1 && yAtX2 <= y2) {
-    points.push({ x: x2, y: yAtX2 });
-  }
-
-  // Check intersection with y = y1
   if (slope !== 0) {
-    const xAtY1 = (y1 - intercept) / slope;
-    if (xAtY1 >= x1 && xAtY1 <= x2) {
-      points.push({ x: xAtY1, y: y1 });
-    }
+    addIntersection(points, (y1 - intercept) / slope, y1, x1, x2, y1, y2);
+    addIntersection(points, (y2 - intercept) / slope, y2, x1, x2, y1, y2);
   }
 
-  // Check intersection with y = y2
-  if (slope !== 0) {
-    const xAtY2 = (y2 - intercept) / slope;
-    if (xAtY2 >= x1 && xAtY2 <= x2) {
-      points.push({ x: xAtY2, y: y2 });
-    }
-  }
-
-  const uniquePoints: { x: number; y: number }[] = [];
-  const epsilon = 1e-7;
-  for (const p of points) {
-    if (!uniquePoints.some(up => Math.abs(up.x - p.x) < epsilon && Math.abs(up.y - p.y) < epsilon)) {
-      uniquePoints.push(p);
-    }
-  }
+  const uniquePoints = getUniquePoints(points);
 
   if (uniquePoints.length >= 2) {
     uniquePoints.sort((a, b) => a.x - b.x);
@@ -117,10 +117,10 @@ function calculateBoundingBox(points: Point[], boundary: Line | null): BoundingB
     yMax = Math.max(yMax, firstPoint.y);
     for (let i = 1; i < points.length; i++) {
       const p = points[i];
-      if (p.x < xMin) xMin = p.x;
-      if (p.x > xMax) xMax = p.x;
-      if (p.y < yMin) yMin = p.y;
-      if (p.y > yMax) yMax = p.y;
+      xMin = Math.min(xMin, p.x);
+      xMax = Math.max(xMax, p.x);
+      yMin = Math.min(yMin, p.y);
+      yMax = Math.max(yMax, p.y);
     }
   }
 
@@ -186,7 +186,7 @@ export class ClassificationChart extends LitElement {
   private comboChart: ComboChart | null = null;
 
   @query('#chart-container')
-  private chartContainer!: HTMLDivElement;
+  private readonly chartContainer!: HTMLDivElement;
 
   protected firstUpdated(): void {
     this.comboChart = new ComboChart(this.chartContainer, {data: [], options});
