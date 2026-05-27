@@ -66,7 +66,7 @@ export class ClassificationTrainingItem extends ClassificationItemBase {
     this._converged = false;
     this.cancelTraining();
 
-    this.withAction(() => {
+    void this.withAction(() => {
       return new Promise<void>((resolve, reject) => {
         let localTestedCount = 0;
         let lastUpdateTime = 0;

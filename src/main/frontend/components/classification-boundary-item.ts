@@ -5,7 +5,12 @@ import {ClassificationItemBase} from './classification-item-base.ts';
 
 const boundaryEquation = (slope: number, intercept: number): string => {
   if (slope === 0) return `y = ${intercept}`;
-  const slopePart = slope === 1 ? 'x' : slope === -1 ? '-x' : `${slope} x`;
+  let slopePart = `${slope} x`;
+  if (slope === 1) {
+    slopePart = 'x';
+  } else if (slope === -1) {
+    slopePart = '-x';
+  }
   if (intercept === 0) return `y = ${slopePart}`;
   const interceptPart = intercept > 0 ? `+ ${intercept}` : `- ${Math.abs(intercept)}`;
   return `y = ${slopePart} ${interceptPart}`;
@@ -26,8 +31,9 @@ export class ClassificationBoundaryItem extends ClassificationItemBase {
   @state()
   private _title = 'Equation de la droite: y = x';
 
-  protected override async firstUpdated(): Promise<void> {
-    await apiClient.getClassification()
+  protected override firstUpdated(): void {
+    super.firstUpdated();
+    apiClient.getClassification()
       .then(c => {
         this._slope = c.boundary.slope;
         this._intercept = c.boundary.intercept;
@@ -39,11 +45,11 @@ export class ClassificationBoundaryItem extends ClassificationItemBase {
 
   private onBoundaryChange(e: Event): void {
     const input = e.target as HTMLInputElement;
-    const parsed = parseFloat(input.value);
-    if (isNaN(parsed)) return;
+    const parsed = Number.parseFloat(input.value);
+    if (Number.isNaN(parsed)) return;
     if (input.getAttribute('name') === 'slope') this._slope = parsed;
     else if (input.getAttribute('name') === 'intercept') this._intercept = parsed;
-    this.withAction(() => apiClient.setClassifier({
+    void this.withAction(() => apiClient.setClassifier({
       slope: this._slope,
       intercept: this._intercept,
     }).then(c => {

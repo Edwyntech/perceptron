@@ -16,6 +16,16 @@ public class Perceptron implements ForPredicting {
     reset();
   }
 
+  private void trainOnCoordinate(double x, double y, Line boundary) {
+    double result = calculateOutput(x, y);
+    double expected = y > x * boundary.slope() + boundary.intercept() ? 1 : -1;
+    double error = expected - result;
+
+    weights[0] += error * x * learningRate;
+    weights[1] += error * y * learningRate;
+    weights[2] += error * learningRate;
+  }
+
   @Override
   public void train(Line boundary) {
     double x = Math.random() * 2 - 1;
@@ -27,13 +37,7 @@ public class Perceptron implements ForPredicting {
 
     double y = yMin + Math.random() * (yMax - yMin);
 
-    double result = calculateOutput(x, y);
-    double expected = y > x * boundary.slope() + boundary.intercept() ? 1 : -1;
-    double error = expected - result;
-
-    weights[0] += error * x * learningRate;
-    weights[1] += error * y * learningRate;
-    weights[2] += error * learningRate;
+    trainOnCoordinate(x, y, boundary);
   }
 
   @Override
@@ -41,15 +45,7 @@ public class Perceptron implements ForPredicting {
     if (point == null) {
       return;
     }
-    double x = point.x();
-    double y = point.y();
-    double result = calculateOutput(x, y);
-    double expected = y > x * boundary.slope() + boundary.intercept() ? 1 : -1;
-    double error = expected - result;
-
-    weights[0] += error * x * learningRate;
-    weights[1] += error * y * learningRate;
-    weights[2] += error * learningRate;
+    trainOnCoordinate(point.x(), point.y(), boundary);
   }
 
   @Override

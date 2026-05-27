@@ -16,8 +16,9 @@ export class ClassificationAddPointsItem extends ClassificationItemBase {
   @state()
   private _addPointsCount = 1000;
 
-  protected override async firstUpdated(): Promise<void> {
-    await apiClient.getClassification()
+  protected override firstUpdated(): void {
+    super.firstUpdated();
+    apiClient.getClassification()
       .then(c => this.notifyClassification(c))
       .catch(console.error);
   }
@@ -51,7 +52,7 @@ export class ClassificationAddPointsItem extends ClassificationItemBase {
       }
     }
 
-    this.withAction(async () => {
+    void this.withAction(async () => {
       const c = await apiClient.addPoints(count, xMin, xMax, yMin, yMax);
       this.classification = c;
       this.notifyClassification(c);
@@ -67,7 +68,7 @@ export class ClassificationAddPointsItem extends ClassificationItemBase {
                           label="nombre de points"
                           min="1" max="1000" step="1"
                           .value=${String(this._addPointsCount)}
-                          @cds-number-input=${(e: CustomEvent<{ value: string }>) => this._addPointsCount = parseInt(e.detail.value)}>
+                          @cds-number-input=${(e: CustomEvent<{ value: string }>) => this._addPointsCount = Number.parseInt(e.detail.value)}>
         </cds-number-input>
         <div style="display: flex; justify-content: flex-end; margin-top: 1.25rem;">
           <cds-button type="button"

@@ -9,7 +9,6 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import tech.edwyn.perceptron.domain.Classification;
 import tech.edwyn.perceptron.domain.Line;
 
-import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -85,8 +84,6 @@ public class ClassificationController {
             .name("complete")
             .data("done"));
         emitter.complete();
-      } catch (IOException | IllegalStateException e) {
-        emitter.completeWithError(e);
       } catch (InterruptedException e) {
         Thread.currentThread().interrupt();
         emitter.completeWithError(e);

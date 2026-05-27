@@ -16,7 +16,7 @@ export class ClassificationPerceptron extends LitElement {
     const old = this._classification;
     this._classification = value;
     this.requestUpdate('classification', old);
-    if (value) this._refreshWeights();
+    if (value) void this._refreshWeights();
   }
   get classification(): Classification | null {
     return this._classification;
@@ -54,7 +54,10 @@ export class ClassificationPerceptron extends LitElement {
   }
 
   override render() {
-    const [w1 = 0, w2 = 0, bias = 0] = this.weights !== null ? this.weights : this._weights;
+    const weightsList = this.weights !== null ? this.weights : this._weights;
+    const w1 = weightsList[0] ?? 0;
+    const w2 = weightsList[1] ?? 0;
+    const bias = weightsList[2] ?? 0;
     const pred = this.prediction !== null ? this.prediction : this._prediction;
 
     // Layout constants
