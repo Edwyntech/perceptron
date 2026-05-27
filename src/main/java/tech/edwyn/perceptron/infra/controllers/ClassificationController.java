@@ -66,33 +66,35 @@ public class ClassificationController {
 
     classification.shufflePoints();
 
-    executor.submit(() -> {
-      try {
-        for (int i = 0; i < epochs; i++) {
-          boolean converged = classification.train();
-          emitter.send(SseEmitter.event()
-              .name("update")
-              .data(new TrainingUpdate(classification.getPrediction(), classification.getWeights(), converged)));
-          if (converged && !classification.getPoints().isEmpty()) {
-            break;
-          }
-          if (delayMs > 0) {
-            Thread.sleep(delayMs);
-          }
-        }
-        emitter.send(SseEmitter.event()
-            .name("complete")
-            .data("done"));
-        emitter.complete();
-      } catch (InterruptedException e) {
-        Thread.currentThread().interrupt();
-        emitter.completeWithError(e);
-      } catch (Exception e) {
-        emitter.completeWithError(e);
-      }
-    });
+    executor.submit(() -> runTrainingTask(emitter, epochs, delayMs));
 
     return emitter;
+  }
+
+  private void runTrainingTask(SseEmitter emitter, int epochs, int delayMs) {
+    try {
+      for (int i = 0; i < epochs; i++) {
+        boolean converged = classification.train();
+        emitter.send(SseEmitter.event()
+            .name("update")
+            .data(new TrainingUpdate(classification.getPrediction(), classification.getWeights(), converged)));
+        if (converged && !classification.getPoints().isEmpty()) {
+          break;
+        }
+        if (delayMs > 0) {
+          Thread.sleep(delayMs);
+        }
+      }
+      emitter.send(SseEmitter.event()
+          .name("complete")
+          .data("done"));
+      emitter.complete();
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      emitter.completeWithError(e);
+    } catch (Exception e) {
+      emitter.completeWithError(e);
+    }
   }
 
   public record TrainingUpdate(Line prediction, double[] weights, boolean converged) {}
