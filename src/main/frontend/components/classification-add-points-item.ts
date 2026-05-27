@@ -1,4 +1,4 @@
-import {html} from 'lit';
+import {html, PropertyValues} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {apiClient} from '../services.ts';
 import {ClassificationItemBase} from './classification-item-base.ts';
@@ -16,8 +16,8 @@ export class ClassificationAddPointsItem extends ClassificationItemBase {
   @state()
   private _addPointsCount = 1000;
 
-  protected override firstUpdated(): void {
-    super.firstUpdated();
+  protected override firstUpdated(changedProperties: PropertyValues): void {
+    super.firstUpdated(changedProperties);
     apiClient.getClassification()
       .then(c => this.notifyClassification(c))
       .catch(console.error);

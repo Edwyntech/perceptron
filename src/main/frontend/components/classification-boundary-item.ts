@@ -1,4 +1,4 @@
-import {html} from 'lit';
+import {html, PropertyValues} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {apiClient} from '../services.ts';
 import {ClassificationItemBase} from './classification-item-base.ts';
@@ -31,8 +31,8 @@ export class ClassificationBoundaryItem extends ClassificationItemBase {
   @state()
   private _title = 'Equation de la droite: y = x';
 
-  protected override firstUpdated(): void {
-    super.firstUpdated();
+  protected override firstUpdated(changedProperties: PropertyValues): void {
+    super.firstUpdated(changedProperties);
     apiClient.getClassification()
       .then(c => {
         this._slope = c.boundary.slope;
