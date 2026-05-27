@@ -1,7 +1,7 @@
 import {LitElement, html} from 'lit';
 import {customElement, property, query} from 'lit/decorators.js';
 import {ChartTabularData, ComboChart, ComboChartOptions, ScaleTypes} from '@carbon/charts';
-import {Classification} from '../domain.ts';
+import {Classification, Line, Point} from '../domain.ts';
 
 const GROUP_CLASSIFICATION = 'Limite';
 const GROUP_PREDICTION = 'Prédiction';
@@ -96,45 +96,53 @@ function clipLineToRectangle(
   return [];
 }
 
-const chartDataFrom = (classification: Classification): ChartTabularData => {
-  const points = classification.points;
+interface BoundingBox {
+  xMin: number;
+  xMax: number;
+  yMin: number;
+  yMax: number;
+}
+
+function calculateBoundingBox(points: Point[], boundary: Line | null): BoundingBox {
   let xMin = -1;
   let xMax = 1;
   let yMin = -1;
   let yMax = 1;
 
-  const pointsData = new Array(points.length);
   if (points.length > 0) {
     const firstPoint = points[0];
     xMin = Math.min(xMin, firstPoint.x);
     xMax = Math.max(xMax, firstPoint.x);
     yMin = Math.min(yMin, firstPoint.y);
     yMax = Math.max(yMax, firstPoint.y);
-    pointsData[0] = {
-      group: firstPoint.label === 'ABOVE' ? GROUP_ABOVE : GROUP_BELOW,
-      x: firstPoint.x,
-      y: firstPoint.y,
-    };
     for (let i = 1; i < points.length; i++) {
       const p = points[i];
       if (p.x < xMin) xMin = p.x;
       if (p.x > xMax) xMax = p.x;
       if (p.y < yMin) yMin = p.y;
       if (p.y > yMax) yMax = p.y;
-      pointsData[i] = {
-        group: p.label === 'ABOVE' ? GROUP_ABOVE : GROUP_BELOW,
-        x: p.x,
-        y: p.y,
-      };
     }
   }
 
-  if (classification.boundary) {
-    const yBoundMin = classification.boundary.slope * xMin + classification.boundary.intercept;
-    const yBoundMax = classification.boundary.slope * xMax + classification.boundary.intercept;
+  if (boundary) {
+    const yBoundMin = boundary.slope * xMin + boundary.intercept;
+    const yBoundMax = boundary.slope * xMax + boundary.intercept;
     yMin = Math.min(yMin, yBoundMin, yBoundMax);
     yMax = Math.max(yMax, yBoundMin, yBoundMax);
   }
+
+  return { xMin, xMax, yMin, yMax };
+}
+
+const chartDataFrom = (classification: Classification): ChartTabularData => {
+  const points = classification.points;
+  const { xMin, xMax, yMin, yMax } = calculateBoundingBox(points, classification.boundary);
+
+  const pointsData = points.map(p => ({
+    group: p.label === 'ABOVE' ? GROUP_ABOVE : GROUP_BELOW,
+    x: p.x,
+    y: p.y,
+  }));
 
   const getLineData = (group: string, slope: number, intercept: number) => {
     return [
@@ -144,7 +152,7 @@ const chartDataFrom = (classification: Classification): ChartTabularData => {
   };
 
   const getClippedPredictionData = (slope: number, intercept: number) => {
-    if (!isFinite(slope) || !isFinite(intercept)) {
+    if (!Number.isFinite(slope) || !Number.isFinite(intercept)) {
       return [];
     }
     const clipped = clipLineToRectangle(slope, intercept, xMin, xMax, yMin, yMax);

@@ -2,7 +2,7 @@ import {html} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {apiClient} from '../services.ts';
 import {ClassificationItemBase} from './classification-item-base.ts';
-import {Classification, Label} from '../domain.ts';
+import {Classification, Label, Point} from '../domain.ts';
 
 @customElement('classification-training-item')
 export class ClassificationTrainingItem extends ClassificationItemBase {
@@ -87,12 +87,7 @@ export class ClassificationTrainingItem extends ClassificationItemBase {
               if (now - lastUpdateTime > throttleDelay || update.converged) {
                 lastUpdateTime = now;
                 this._testedCount = localTestedCount;
-                const [w1 = 0, w2 = 0, bias = 0] = update.weights || [];
-                const points = current.points.map(p => {
-                  const activation = w1 * p.x + w2 * p.y + bias;
-                  const label: Label = activation > 0 ? 'ABOVE' : 'BELOW';
-                  return { ...p, label };
-                });
+                const points = this._updatePointsWithWeights(current.points, update.weights || []);
                 const updated: Classification = {
                   ...current,
                   prediction: update.prediction,
@@ -122,6 +117,15 @@ export class ClassificationTrainingItem extends ClassificationItemBase {
           }
         );
       });
+    });
+  }
+
+  private _updatePointsWithWeights(points: Point[], weights: number[]): Point[] {
+    const [w1 = 0, w2 = 0, bias = 0] = weights;
+    return points.map(p => {
+      const activation = w1 * p.x + w2 * p.y + bias;
+      const label: Label = activation > 0 ? 'ABOVE' : 'BELOW';
+      return { ...p, label };
     });
   }
 

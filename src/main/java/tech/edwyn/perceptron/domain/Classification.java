@@ -73,28 +73,31 @@ public class Classification {
     this.currentPointIndex = 0;
   }
 
+  private boolean checkConvergence() {
+    boolean converged = true;
+    for (Point p : points) {
+      Label prediction = forPredicting.predict(p.x(), p.y());
+      Label expected = (p.y() > p.x() * boundary.slope() + boundary.intercept()) ? Label.ABOVE : Label.BELOW;
+      if (prediction != expected) {
+        converged = false;
+      }
+    }
+    return converged;
+  }
+
   public synchronized boolean train() {
     if (points.isEmpty()) {
       forPredicting.train(boundary);
       return false;
-    } else {
-      if (currentPointIndex >= points.size()) {
-        shufflePoints();
-      }
-      Point point = points.get(currentPointIndex);
-      forPredicting.train(point, boundary);
-      currentPointIndex++;
-
-      boolean converged = true;
-      for (Point p : points) {
-        Label prediction = forPredicting.predict(p.x(), p.y());
-        Label expected = (p.y() > p.x() * boundary.slope() + boundary.intercept()) ? Label.ABOVE : Label.BELOW;
-        if (prediction != expected) {
-          converged = false;
-        }
-      }
-      return converged;
     }
+    if (currentPointIndex >= points.size()) {
+      shufflePoints();
+    }
+    Point point = points.get(currentPointIndex);
+    forPredicting.train(point, boundary);
+    currentPointIndex++;
+
+    return checkConvergence();
   }
 
   public synchronized void updatePointLabels() {
