@@ -165,7 +165,7 @@ classification-perceptron {
   gap: layout.$spacing-03;
   justify-content: flex-start;
   padding: layout.$spacing-04 0;
-  font-family: var(--cds-font-family, monospace);
+  font-family: var(--cds-font-family), monospace;
   font-size: 1.25rem;
   color: var(--cds-text-primary, #161616);
 

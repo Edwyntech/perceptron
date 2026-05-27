@@ -7,6 +7,7 @@ import tech.edwyn.perceptron.domain.spi.ForPredicting;
 
 import java.util.Collection;
 
+@SuppressWarnings("unused")
 public class GeometryPrediction implements ForPredicting {
   private Line boundary;
 
